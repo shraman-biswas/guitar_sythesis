@@ -7,8 +7,8 @@ Uses a simple RTTTL parser to process music file.
 Includes 9 music tracks.
 
 Parameters:
-* attenuation factor (alpha)
-* frequency offset (Hz)
+* Karplus-Strong Algorithm attenuation factor (alpha)
+* Frequency offset (Hz)
 
 Usage: python main.py track  
 &nbsp;&nbsp;
