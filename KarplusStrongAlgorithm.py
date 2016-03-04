@@ -8,8 +8,8 @@ from RTTTL import RTTTL
 
 class KarplusStrongAlgorithm(RTTTL):
 
-	# https://en.wikipedia.org/wiki/Scientific_pitch_notation
-	# octaves: 0 - 10
+	# source: https://en.wikipedia.org/wiki/Scientific_pitch_notation
+	# octaves:	0	1	2	3	4	5	6	7	8	9	10
 	_pitch_table = {
 		"c" : [ 16.352, 32.703, 65.406, 130.81, 261.63, 523.25, 1046.5, 2093.0, 4186.0, 8372.0, 16744.0, ],
 		"c#" : [ 17.324, 34.648, 69.296, 138.59, 277.18, 554.37, 1108.7, 2217.5, 4434.9, 8869.8, 17739.7, ],
@@ -28,18 +28,21 @@ class KarplusStrongAlgorithm(RTTTL):
 	def __init__(self, alpha=0.997, offset=3):
 		self._offset = offset
 		# parameters
-		self._alpha = alpha
-		self._nchannels = 1
-		self._swidth = 2
-		self._srate = 44100	# Hz
-		# init audio
+		self._alpha = alpha	# attenuation factor
+		self._nchannels = 1	# number of audio output channels
+		self._swidth = 2	# sample width (bytes)
+		self._srate = 44100	# sampling rate (Hz)
+		# initialize audio output device
 		self._audio_device = pyaudio.PyAudio()
-		self._audio_stream = self._audio_device.open(format=self._audio_device.get_format_from_width(self._swidth),
-								channels=self._nchannels,
-								rate=self._srate,
-								output=True)
+		self._audio_stream = self._audio_device.open(
+					format=self._audio_device. \
+					get_format_from_width(self._swidth),
+					channels=self._nchannels,
+					rate=self._srate,
+					output=True)
 
-	def play_note(self, note_freq, duration): # note_freq=Hz, duration=seconds
+	# play note of specified frequency (Hz) and duration (seconds)
+	def play_note(self, note_freq, duration):
 		# compute parameters
 		N = int(self._srate / note_freq)
 		nsamples = int(self._srate * duration)
@@ -49,9 +52,11 @@ class KarplusStrongAlgorithm(RTTTL):
 			n = i % N
 			if n == 0:
 				tmp_buf = [int(x * 32767) for x in buf]
-				data = wave.struct.pack("%ih"%(len(tmp_buf)), *list(tmp_buf))
+				data = wave.struct.pack("%ih"%(len(tmp_buf)), 
+								*list(tmp_buf))
 				self._audio_stream.write(data)
-			average = 0.5 * (buf[n] + buf[n-1] if n != 0 else buf[N-1])
+			average = (0.5 * (buf[n] + buf[n-1]) 
+					if n != 0 else buf[N-1])
 			buf[n] = self._alpha * average
 
 	def play_music(self, music_str):
@@ -60,9 +65,11 @@ class KarplusStrongAlgorithm(RTTTL):
 		self._timestep = 240.0 / self._def_beat
 		for x in music:
 			print x
+			# parse note parameters
 			note = x[1]
 			octave = x[2]
 			dot = x[3]
+			# calculate duration
 			duration = self._timestep * (1.5 if dot else 1) / x[0]
 			if note == "p" or note == "-":
 				time.sleep(duration)
