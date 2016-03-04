@@ -11,7 +11,7 @@ def main():
 		music = f.read().splitlines()
 
 	# get music track selection number
-	track_num = int(sys.argv[1])-1 if len(sys.argv) > 1 else 0
+	track_num = int(sys.argv[1])-1 if len(sys.argv) > 1 else 7
 
 	# parameters
 	alpha = 0.997	# attenuation factor
