@@ -26,9 +26,8 @@ class KarplusStrongAlgorithm(RTTTL):
 	}
 
 	def __init__(self, alpha=0.997, offset=3):
-		self._offset = offset
-
 		# parameters
+		self._offset = offset
 		self._alpha = alpha	# attenuation factor
 		self._nchannels = 1	# number of audio output channels
 		self._swidth = 2	# sample width (bytes)
@@ -49,6 +48,7 @@ class KarplusStrongAlgorithm(RTTTL):
 		N = int(self._srate / note_freq)
 		nsamples = int(self._srate * duration)
 		buf = [random.uniform(-1,1) for _ in range(N)]
+
 		# online processing
 		for i in range(nsamples):
 			n = i % N
@@ -67,10 +67,12 @@ class KarplusStrongAlgorithm(RTTTL):
 		self._timestep = 240.0 / self._def_beat
 		for x in music:
 			print x
+
 			# parse note parameters
 			note = x[1]
 			octave = x[2]
 			dot = x[3]
+
 			# calculate duration
 			duration = self._timestep * (1.5 if dot else 1) / x[0]
 			if note == "p" or note == "-":
