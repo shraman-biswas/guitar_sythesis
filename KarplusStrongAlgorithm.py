@@ -27,19 +27,21 @@ class KarplusStrongAlgorithm(RTTTL):
 
 	def __init__(self, alpha=0.997, offset=3):
 		self._offset = offset
+
 		# parameters
 		self._alpha = alpha	# attenuation factor
 		self._nchannels = 1	# number of audio output channels
 		self._swidth = 2	# sample width (bytes)
 		self._srate = 44100	# sampling rate (Hz)
+
 		# initialize audio output device
 		self._audio_device = pyaudio.PyAudio()
 		self._audio_stream = self._audio_device.open(
-					format=self._audio_device. \
-					get_format_from_width(self._swidth),
-					channels=self._nchannels,
-					rate=self._srate,
-					output=True)
+			format=self._audio_device. \
+			get_format_from_width(self._swidth),
+			channels=self._nchannels,
+			rate=self._srate,
+			output=True)
 
 	# play note of specified frequency (Hz) and duration (seconds)
 	def play_note(self, note_freq, duration):
